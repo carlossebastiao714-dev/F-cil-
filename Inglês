@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluency Fast English</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#061a12;
+color:white;
+}
+
+.header{
+background:#16a34a;
+padding:14px;
+text-align:center;
+font-weight:bold;
+}
+
+.nav{
+display:flex;
+justify-content:space-around;
+background:#0f2e1c;
+padding:10px;
+position:sticky;
+top:0;
+}
+
+.nav button{
+background:#14532d;
+border:none;
+color:white;
+padding:10px;
+border-radius:8px;
+width:48%;
+}
+
+.section{display:none;padding:10px;}
+.active{display:block;}
+
+.card{
+background:#0f2e1c;
+margin:10px 0;
+padding:12px;
+border-radius:12px;
+}
+
+button{
+background:#22c55e;
+border:none;
+padding:10px;
+border-radius:8px;
+color:white;
+width:100%;
+margin-top:10px;
+font-weight:bold;
+}
+
+.small{opacity:0.8;font-size:14px;}
+
+input{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:none;
+margin-top:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">FLUENCY FAST ENGLISH</div>
+
+<div class="nav">
+<button onclick="show('method')">📘 Método</button>
+<button onclick="show('duo')">🤖 Duolingo</button>
+</div>
+
+<!-- MÉTODO -->
+<div id="method" class="section active">
+
+<div class="card">
+<h3>I want water</h3>
+<p class="small">Eu quero água</p>
+<button onclick="speak('I want water')">🔊 Ouvir</button>
+</div>
+
+<div class="card">
+<h3>I need help</h3>
+<p class="small">Eu preciso de ajuda</p>
+<button onclick="speak('I need help')">🔊 Ouvir</button>
+</div>
+
+<div class="card">
+<h3>I am tired</h3>
+<p class="small">Eu estou cansado</p>
+<button onclick="speak('I am tired')">🔊 Ouvir</button>
+</div>
+
+<div class="card">
+<h3>Base essencial</h3>
+<p>I am / I have / I want / I need / I like</p>
+<button onclick="speak('I am I have I want I need I like')">🔊 Ouvir base</button>
+</div>
+
+</div>
+
+<!-- DUOLINGO -->
+<div id="duo" class="section">
+
+<div class="card">
+<h3>✍ Exercício</h3>
+
+<p id="q">I ___ hungry</p>
+
+<input id="a" placeholder="am / have / want">
+<button onclick="check()">Verificar</button>
+
+<p id="r"></p>
+
+<button onclick="next()">Próxima</button>
+</div>
+
+<div class="card">
+<h3>💬 Chat treino</h3>
+
+<div id="chat"></div>
+
+<input id="msg" placeholder="Digite inglês...">
+<button onclick="send()">Enviar</button>
+</div>
+
+</div>
+
+<script>
+
+function show(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+/* AUDIO */
+function speak(t){
+let msg = new SpeechSynthesisUtterance(t);
+msg.lang = "en-US";
+speechSynthesis.speak(msg);
+}
+
+/* EXERCÍCIOS */
+let q=[
+{q:"I ___ hungry",a:"am"},
+{q:"I ___ a car",a:"have"},
+{q:"I ___ coffee",a:"want"}
+];
+
+let i=0;
+
+function next(){
+i=(i+1)%q.length;
+document.getElementById("q").innerText=q[i].q;
+document.getElementById("r").innerText="";
+document.getElementById("a").value="";
+}
+
+function check(){
+let v=document.getElementById("a").value.toLowerCase();
+document.getElementById("r").innerText =
+v.includes(q[i].a) ? "✔ Correto" : "✖ Tente novamente";
+}
+
+/* CHAT SIMPLES */
+function send(){
+let t=document.getElementById("msg").value;
+if(!t) return;
+
+let chat=document.getElementById("chat");
+
+chat.innerHTML += "<div>You: "+t+"</div>";
+
+let r="Use: I am / I want / I need";
+
+if(t.includes("i am")) r="Good! Try: I am happy";
+if(t.includes("i want")) r="Nice! Try: I want water";
+if(t.includes("i need")) r="Good! Example: I need help";
+
+setTimeout(()=>{
+chat.innerHTML += "<div>AI: "+r+"</div>";
+},500);
+
+document.getElementById("msg").value="";
+}
+
+</script>
+
+</body>
+</html>
